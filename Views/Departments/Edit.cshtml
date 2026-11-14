@@ -1,0 +1,18 @@
+@model Department
+@{
+    ViewData["Title"] = "Редактировать кафедру";
+}
+<div class="page-heading">
+    <div><div class="eyebrow">СТРУКТУРА УНИВЕРСИТЕТА</div><h1>Редактировать кафедру</h1><p class="page-subtitle">Заполните информацию о подразделении.</p></div>
+    <a class="btn-secondary-app" asp-action="Index">← К списку кафедр</a>
+</div>
+<section class="form-card">
+    <div class="form-card-heading"><span class="form-icon violet">▦</span><div><h3>Данные кафедры</h3><p>Поля со звёздочкой обязательны для заполнения.</p></div></div>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+        <div class="form-group-app"><label asp-for="Name"></label><input asp-for="Name" class="form-control-app" placeholder="Например, Кафедра информационных систем" /><span asp-validation-for="Name" class="field-error"></span></div>
+        <div class="form-actions"><a class="btn-secondary-app" asp-action="Index">Отмена</a><button type="submit" class="btn-primary-app">Сохранить</button></div>
+    </form>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

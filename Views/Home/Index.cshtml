@@ -1,0 +1,135 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Главная панель";
+    var maxCount = Math.Max(1, Model.DepartmentStatistics.Select(x => x.TeachersCount).DefaultIfEmpty(0).Max());
+}
+
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">ОБЗОР УНИВЕРСИТЕТА</div>
+        <h1>Главная панель</h1>
+        <p class="page-subtitle">Ключевые показатели и быстрый доступ к управлению университетом.</p>
+    </div>
+    <div class="heading-date"><span class="date-icon">◷</span>@DateTime.Now.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"))</div>
+</div>
+
+<section class="welcome-banner">
+    <div class="welcome-copy">
+        <span class="banner-kicker">УПРАВЛЕНИЕ УНИВЕРСИТЕТОМ</span>
+        <h2>Всё под контролем.<br /><em>Каждый день.</em></h2>
+        <p>Управляйте кафедрами и преподавательским составом с единой панели.</p>
+        <a class="banner-button" asp-controller="Departments" asp-action="Index">Перейти к управлению <span>↗</span></a>
+    </div>
+    <div class="banner-art" aria-hidden="true">
+        <div class="art-ring ring-one"></div><div class="art-ring ring-two"></div>
+        <div class="art-core"><span>U</span></div>
+        <div class="art-chip chip-one">✦ Академическая среда</div>
+        <div class="art-chip chip-two">01 /  Управление</div>
+    </div>
+</section>
+
+<div class="section-heading">
+    <div><span class="eyebrow">АНАЛИТИКА</span><h2>Общая статистика</h2></div>
+    <span class="live-label"><i></i> Данные из базы</span>
+</div>
+
+<div class="stats-grid">
+    <article class="stat-card stat-purple">
+        <div class="stat-top"><span class="stat-icon">▦</span><span class="stat-period">Всего в системе</span></div>
+        <div class="stat-number">@Model.DepartmentsCount</div>
+        <div class="stat-name">Кафедры</div>
+        <div class="stat-foot"><span class="trend-dot"></span> Структурные подразделения</div>
+        <div class="stat-watermark">▦</div>
+    </article>
+    <article class="stat-card stat-blue">
+        <div class="stat-top"><span class="stat-icon">♙</span><span class="stat-period">Всего в системе</span></div>
+        <div class="stat-number">@Model.TeachersCount</div>
+        <div class="stat-name">Преподаватели</div>
+        <div class="stat-foot"><span class="trend-dot"></span> Преподавательский состав</div>
+        <div class="stat-watermark">♙</div>
+    </article>
+    <article class="stat-card stat-dark">
+        <div class="stat-top"><span class="stat-icon">⌁</span><span class="stat-period">Сводка</span></div>
+        <div class="stat-number">@(Model.DepartmentsCount == 0 ? "—" : (Model.TeachersCount / (double)Model.DepartmentsCount).ToString("0.0"))</div>
+        <div class="stat-name">Среднее число преподавателей</div>
+        <div class="stat-foot"><span class="trend-dot"></span> На одну кафедру</div>
+        <div class="stat-watermark">⌁</div>
+    </article>
+</div>
+
+<div class="dashboard-grid">
+    <section class="content-card">
+        <div class="card-heading">
+            <div><span class="eyebrow">РАСПРЕДЕЛЕНИЕ</span><h3>Преподаватели по кафедрам</h3></div>
+            <a class="text-link" asp-controller="Departments" asp-action="Index">Все кафедры <span>→</span></a>
+        </div>
+        @if (Model.DepartmentStatistics.Count == 0)
+        {
+            <div class="empty-state">
+                <div class="empty-icon">▦</div>
+                <strong>Пока нет данных</strong>
+                <p>Добавьте первую кафедру, чтобы увидеть статистику.</p>
+                <a asp-controller="Departments" asp-action="Create" class="btn-primary-app">Добавить кафедру</a>
+            </div>
+        }
+        else
+        {
+            <div class="bar-list">
+                @foreach (var item in Model.DepartmentStatistics)
+                {
+                    var width = Math.Max(4, (int)Math.Round(item.TeachersCount * 100.0 / maxCount));
+                    <div class="bar-item">
+                        <div class="bar-label"><span>@item.Name</span><strong>@item.TeachersCount</strong></div>
+                        <div class="bar-track"><div class="bar-fill" style="width:@(width)%"></div></div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="content-card quick-card">
+        <div class="card-heading">
+            <div><span class="eyebrow">БЫСТРЫЙ ДОСТУП</span><h3>Действия</h3></div>
+            <span class="quick-spark">✦</span>
+        </div>
+        <a class="quick-action" asp-controller="Departments" asp-action="Create">
+            <span class="quick-action-icon violet">＋</span><span><strong>Добавить кафедру</strong><small>Создать подразделение</small></span><b>→</b>
+        </a>
+        <a class="quick-action" asp-controller="Teachers" asp-action="Create">
+            <span class="quick-action-icon cyan">＋</span><span><strong>Добавить преподавателя</strong><small>Внести данные сотрудника</small></span><b>→</b>
+        </a>
+        <a class="quick-action" asp-controller="Teachers" asp-action="Index">
+            <span class="quick-action-icon orange">≡</span><span><strong>Список преподавателей</strong><small>Поиск и редактирование</small></span><b>→</b>
+        </a>
+    </section>
+</div>
+
+<section class="content-card recent-card">
+    <div class="card-heading">
+        <div><span class="eyebrow">ПОСЛЕДНИЕ ЗАПИСИ</span><h3>Новые преподаватели</h3></div>
+        <a class="text-link" asp-controller="Teachers" asp-action="Index">Открыть список <span>→</span></a>
+    </div>
+    @if (Model.RecentTeachers.Count == 0)
+    {
+        <div class="empty-inline">Записей пока нет. Добавьте первого преподавателя через быстрые действия.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="app-table">
+                <thead><tr><th>ПРЕПОДАВАТЕЛЬ</th><th>КАФЕДРА</th><th>СТАТУС</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var teacher in Model.RecentTeachers)
+                {
+                    <tr>
+                        <td><div class="person-cell"><span class="person-avatar">@(string.IsNullOrWhiteSpace(teacher.FullName) ? "?" : teacher.FullName.Trim().Substring(0, 1).ToUpperInvariant())</span><strong>@teacher.FullName</strong></div></td>
+                        <td>@teacher.Department?.Name</td>
+                        <td><span class="status-pill"><i></i> В системе</span></td>
+                        <td><a class="row-link" asp-controller="Teachers" asp-action="Edit" asp-route-id="@teacher.Id">Открыть →</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

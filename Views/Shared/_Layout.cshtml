@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <title>@ViewData["Title"] — University Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">U</span>
+                <span><strong>УНИВЕРСИТЕТ</strong><small>ЦЕНТР УПРАВЛЕНИЯ</small></span>
+            </a>
+
+            <div class="sidebar-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+            <nav class="side-nav">
+                <a class="side-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                   asp-controller="Home" asp-action="Index">
+                    <span class="nav-icon">⌂</span><span>Главная панель</span>
+                </a>
+                <a class="side-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Departments" ? "active" : "")"
+                   asp-controller="Departments" asp-action="Index">
+                    <span class="nav-icon">▦</span><span>Кафедры</span>
+                </a>
+                <a class="side-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Teachers" ? "active" : "")"
+                   asp-controller="Teachers" asp-action="Index">
+                    <span class="nav-icon">♙</span><span>Преподаватели</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-help">
+                    <div class="help-orb">✦</div>
+                    <strong>Рабочая система</strong>
+                    <p>Управляйте структурой университета в одном месте.</p>
+                </div>
+                <div class="user-mini">
+                    <div class="avatar">АД</div>
+                    <div><strong>Администратор</strong><small>Панель управления</small></div>
+                    <span class="online-dot"></span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-area">
+            <header class="topbar">
+                <button class="mobile-menu" id="menuToggle" type="button" aria-label="Открыть меню">☰</button>
+                <div class="breadcrumb-line">
+                    <span>Университет</span><span class="crumb-separator">/</span>
+                    <strong>@(ViewData["Title"] ?? "Главная панель")</strong>
+                </div>
+                <div class="topbar-right">
+                    <span class="system-status"><i></i> Система активна</span>
+                    <div class="top-avatar">АД</div>
+                </div>
+            </header>
+
+            <section class="page-content">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success app-alert">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger app-alert">@TempData["Error"]</div>
+                }
+                @RenderBody()
+                <footer class="app-footer">
+                    <span>© @DateTime.Now.Year Центр управления университетом</span>
+                    <span>Административная система университета</span>
+                </footer>
+            </section>
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

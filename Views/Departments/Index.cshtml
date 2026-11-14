@@ -1,0 +1,35 @@
+@model IEnumerable<Department>
+@{
+    ViewData["Title"] = "Кафедры";
+}
+<div class="page-heading">
+    <div><div class="eyebrow">СТРУКТУРА УНИВЕРСИТЕТА</div><h1>Кафедры</h1><p class="page-subtitle">Управление структурными подразделениями университета.</p></div>
+    <a class="btn-primary-app" asp-action="Create"><span>＋</span> Добавить кафедру</a>
+</div>
+<section class="content-card listing-card">
+    <div class="list-toolbar">
+        <div><h3>Список кафедр</h3><p>Всего записей: <strong>@Model.Count()</strong></p></div>
+        <form method="get" class="search-form"><input type="search" name="search" value="@ViewData["Search"]" placeholder="Поиск кафедры..." /><button type="submit">⌕</button></form>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="empty-state"><div class="empty-icon">▦</div><strong>Кафедры не найдены</strong><p>Добавьте новую кафедру или измените поисковый запрос.</p><a class="btn-primary-app" asp-action="Create">Добавить кафедру</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="app-table">
+            <thead><tr><th>НАЗВАНИЕ КАФЕДРЫ</th><th>ПРЕПОДАВАТЕЛИ</th><th>ИДЕНТИФИКАТОР</th><th class="text-end">ДЕЙСТВИЯ</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><div class="person-cell"><span class="table-icon violet">▦</span><strong>@item.Name</strong></div></td>
+                    <td><span class="count-pill">@item.Teachers.Count сотрудников</span></td>
+                    <td><span class="id-label">#@item.Id.ToString("D3")</span></td>
+                    <td><div class="table-actions"><a asp-action="Edit" asp-route-id="@item.Id">Изменить</a><a class="delete-link" asp-action="Delete" asp-route-id="@item.Id">Удалить</a></div></td>
+                </tr>
+            }
+            </tbody>
+        </table></div>
+    }
+</section>

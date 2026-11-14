@@ -1,0 +1,39 @@
+@model IEnumerable<Teacher>
+@{
+    ViewData["Title"] = "Преподаватели";
+}
+<div class="page-heading">
+    <div><div class="eyebrow">ПРЕПОДАВАТЕЛЬСКИЙ СОСТАВ</div><h1>Преподаватели</h1><p class="page-subtitle">Управление данными преподавателей и их кафедрами.</p></div>
+    <a class="btn-primary-app" asp-action="Create"><span>＋</span> Добавить преподавателя</a>
+</div>
+<section class="content-card listing-card">
+    <div class="list-toolbar">
+        <div><h3>Список преподавателей</h3><p>Найдено записей: <strong>@Model.Count()</strong></p></div>
+        <form method="get" class="search-form">
+            <input type="search" name="search" value="@ViewData["Search"]" placeholder="Поиск по ФИО..." />
+            <select name="departmentId" asp-items="ViewBag.DepartmentId"><option value="">Все кафедры</option></select>
+            <button type="submit">⌕</button>
+        </form>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="empty-state"><div class="empty-icon">♙</div><strong>Преподаватели не найдены</strong><p>Добавьте сотрудника или измените параметры поиска.</p><a class="btn-primary-app" asp-action="Create">Добавить преподавателя</a></div>
+    }
+    else
+    {
+        <div class="table-responsive"><table class="app-table">
+            <thead><tr><th>ПРЕПОДАВАТЕЛЬ</th><th>КАФЕДРА</th><th>ИДЕНТИФИКАТОР</th><th class="text-end">ДЕЙСТВИЯ</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><div class="person-cell"><span class="person-avatar">@(string.IsNullOrWhiteSpace(item.FullName) ? "?" : item.FullName.Trim().Substring(0, 1).ToUpperInvariant())</span><strong>@item.FullName</strong></div></td>
+                    <td>@item.Department?.Name</td>
+                    <td><span class="id-label">#@item.Id.ToString("D3")</span></td>
+                    <td><div class="table-actions"><a asp-action="Edit" asp-route-id="@item.Id">Изменить</a><a class="delete-link" asp-action="Delete" asp-route-id="@item.Id">Удалить</a></div></td>
+                </tr>
+            }
+            </tbody>
+        </table></div>
+    }
+</section>

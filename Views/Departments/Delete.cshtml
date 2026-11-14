@@ -1,0 +1,18 @@
+@model Department
+@{
+    ViewData["Title"] = "Удаление кафедры";
+}
+<div class="page-heading"><div><div class="eyebrow">УПРАВЛЕНИЕ ДАННЫМИ</div><h1>Удаление кафедры</h1><p class="page-subtitle">Проверьте информацию перед подтверждением.</p></div></div>
+<section class="form-card confirm-card">
+    <div class="confirm-symbol">!</div><h3>Удалить кафедру «@Model.Name»?</h3>
+    @if (Model.Teachers.Any())
+    {
+        <p class="confirm-warning">К этой кафедре привязано преподавателей: @Model.Teachers.Count. Сначала переназначьте или удалите их.</p>
+        <a class="btn-secondary-app" asp-action="Index">Вернуться к списку</a>
+    }
+    else
+    {
+        <p>Это действие нельзя будет отменить.</p>
+        <form asp-action="Delete" method="post"><input type="hidden" asp-for="Id" /><div class="form-actions"><a class="btn-secondary-app" asp-action="Index">Отмена</a><button class="btn-danger-app" type="submit">Удалить кафедру</button></div></form>
+    }
+</section>

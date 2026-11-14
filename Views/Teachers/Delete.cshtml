@@ -1,0 +1,11 @@
+@model Teacher
+@{
+    ViewData["Title"] = "Удаление преподавателя";
+}
+<div class="page-heading"><div><div class="eyebrow">УПРАВЛЕНИЕ ДАННЫМИ</div><h1>Удаление преподавателя</h1><p class="page-subtitle">Проверьте информацию перед подтверждением.</p></div></div>
+<section class="form-card confirm-card">
+    <div class="confirm-symbol">!</div><h3>Удалить преподавателя?</h3>
+    <div class="confirm-person"><strong>@Model.FullName</strong><span>@Model.Department?.Name</span></div>
+    <p>Запись будет удалена из базы данных. Это действие нельзя будет отменить.</p>
+    <form asp-action="Delete" method="post"><input type="hidden" asp-for="Id" /><div class="form-actions"><a class="btn-secondary-app" asp-action="Index">Отмена</a><button class="btn-danger-app" type="submit">Удалить преподавателя</button></div></form>
+</section>
